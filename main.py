@@ -1,10 +1,9 @@
 import requests
 import pandas as pd
 from sqlalchemy import create_engine
-import sys # We'll use this to exit if the database fails
+import sys # exit if the database fails
 
 # --- DATABASE CONNECTION DETAILS ---
-# !! IMPORTANT: Change this to the password you created on Day 1 !!
 DB_PASSWORD = "1402" 
 # -----------------------------------
 
@@ -69,8 +68,7 @@ def load_data(df):
     """Loads the clean DataFrame into the PostgreSQL database."""
     print("Connecting to database...")
     try:
-        # Create the "connection string"
-        # This is like the database's full, private address
+
         # format: "postgresql://user:password@host:port/database_name"
         db_url = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
         
@@ -79,12 +77,12 @@ def load_data(df):
         
         print("Loading data into 'articles' table...")
         
-        # This is the magic pandas command!
+        # Pandas sql command 
         df.to_sql(
             name='articles',    # The name of our table in pgAdmin
             con=engine,         # The connection engine we just made
             if_exists='append', # 'append' means add new data. 'replace' would wipe it out.
-            index=False         # Don't save the pandas index (0, 1, 2...) as a column
+            index=False         
         )
         
         print("Data loaded successfully!")
@@ -94,7 +92,7 @@ def load_data(df):
         print("Please check your DB_PASSWORD in the script and that PostgreSQL is running.")
         sys.exit(1) # Exit the script if the database part fails
 
-# --- UPDATED MAIN SCRIPT ---
+# --- MAIN SCRIPT ---
 if __name__ == "__main__":
     raw_data = fetch_data(API_URL)
     clean_articles_df = transform_data(raw_data)
@@ -104,7 +102,7 @@ if __name__ == "__main__":
         print(clean_articles_df.head()) # .head() prints just the first 5
         print("-----------------------------------------")
         
-        # This is our new "L" step
+        # Load step
         load_data(clean_articles_df)
         
     else:
