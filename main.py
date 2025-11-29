@@ -8,7 +8,7 @@ DB_PASSWORD = "1402"
 # -----------------------------------
 
 DB_USER = "postgres"
-DB_HOST = "localhost"
+DB_HOST = "db"
 DB_PORT = "5432"
 DB_NAME = "article_db"
 API_URL = "https://saurav.tech/NewsAPI/top-headlines/category/technology/in.json"

@@ -1,0 +1,32 @@
+# No more version, as the warning said!
+
+services:
+  
+  # 1. Our "Database House"
+  db:
+    image: postgres:latest
+    container_name: my-postgres-db-compose
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=article_db
+    ports:
+      - "5432:5432"
+    
+    # --- NEW SECTION (THE "HEALTH TEST") ---
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d article_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. Our "Python House"
+  app:
+    build: .
+    container_name: my-python-app-compose
+    environment:
+      - DB_PASSWORD=${DB_PASSWORD}
+    
+    # --- UPDATED "DEPENDS_ON" ---
+    depends_on:
+      db:
+        condition: service_healthy # <-- This is the magic!!
